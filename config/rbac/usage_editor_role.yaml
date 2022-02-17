@@ -1,0 +1,24 @@
+# permissions for end users to edit usages.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: usage-editor-role
+rules:
+- apiGroups:
+  - cloud.cmft.com
+  resources:
+  - usages
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cloud.cmft.com
+  resources:
+  - usages/status
+  verbs:
+  - get

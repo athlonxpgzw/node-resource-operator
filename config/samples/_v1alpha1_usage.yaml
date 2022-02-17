@@ -1,0 +1,6 @@
+apiVersion: cloud.cmft.com/v1alpha1
+kind: Usage
+metadata:
+  name: usage-sample
+spec:
+  # TODO(user): Add fields here
