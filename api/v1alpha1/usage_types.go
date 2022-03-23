@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -28,18 +29,56 @@ type UsageSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Usage. Edit usage_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// +optional
+	Nodes corev1.NodeSelectorTerm `json:"NodeSelector,omitempty"`
+	// Selector *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,2,name=selector"`
+
+	// metrics contains the specifications for which to use to calculate the
+	// desired replica count (the maximum replica count across all metrics will
+	// be used).  The desired replica count is calculated multiplying the
+	// ratio between the target value and the current value by the current
+	// number of pods.  Ergo, metrics used must decrease as the pod count is
+	// increased, and vice-versa.  See the individual metric source types for
+	// more information about how each type of metric must respond.
+	// If not set, the default metric will be set to 80% average CPU utilization.
+	// +listType=atomic
+	// +optional
+	Metrics []MetricSpec `json:"metrics,omitempty" protobuf:"bytes,4,rep,name=metrics"`
 }
 
 // UsageStatus defines the observed state of Usage
 type UsageStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	NodeCount           int         `json:"NodeCount,omitempty"`
+	LastMetricTimestamp metav1.Time `json:"LastMetricTimestamp,omitempty"`
 }
+
+// MetricSpec specifies how to scale based on a single metric
+// (only `type` and one other matching field should be set at once).
+type MetricSpec struct {
+	// type is the type of metric source.  It should be one of "ContainerResource", "External",
+	// "Object", "Pods" or "Resource", each mapping to a matching field in the object.
+	// Note: "ContainerResource" type is available on when the feature-gate
+	// HPAContainerMetrics is enabled
+	Type MetricSourceType `json:"type" protobuf:"bytes,1,name=type"`
+	// name is the name of the given metric
+	Name string `json:"name" protobuf:"bytes,1,name=name"`
+}
+
+// MetricSourceType indicates the type of metric.
+type MetricSourceType string
+
+const (
+	// PodsMetricSourceType is a metric describing each pod in the current scale
+	// target (for example, transactions-processed-per-second).  The values
+	// will be averaged together before being compared to the target value.
+	NodesMetricSourceType MetricSourceType = "Node"
+)
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:scope=Cluster
 
 // Usage is the Schema for the usages API
 type Usage struct {
