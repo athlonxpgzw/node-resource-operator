@@ -138,9 +138,6 @@ spec:
           status:
             description: UsageStatus defines the observed state of Usage
             properties:
-              LastMetricTimestamp:
-                format: date-time
-                type: string
               NodeCount:
                 description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
                   of cluster Important: Run "make" to regenerate code after modifying

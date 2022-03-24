@@ -50,8 +50,7 @@ type UsageSpec struct {
 type UsageStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	NodeCount           int         `json:"NodeCount,omitempty"`
-	LastMetricTimestamp metav1.Time `json:"LastMetricTimestamp,omitempty"`
+	NodeCount int `json:"NodeCount,omitempty"`
 }
 
 // MetricSpec specifies how to scale based on a single metric

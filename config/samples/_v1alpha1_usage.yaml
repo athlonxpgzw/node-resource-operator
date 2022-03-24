@@ -8,12 +8,16 @@ spec:
       type: Node
     - name: cpu_usage_avg_5m
       type: Node
+    - name: cpu_usage_max_avg_1h
+      type: Node
+    - name: cpu_usage_max_avg_1d
+      type: Node 
     - name: mem_usage_active
       type: Node
     - name: mem_usage_avg_5m
       type: Node
-    # - name: cpu_usage_max_avg_1h
-    #   type: Node
-    # - name: cpu_usage_max_avg_1d
-    #   type: Node      
+    - name: mem_usage_max_avg_1h
+      type: Node
+    - name: mem_usage_max_avg_1d
+      type: Node      
   # TODO(user): Add fields here
